@@ -1,8 +1,8 @@
-# Ollama Setup Script for Mac M1
+# Ollama Setup Script for Mac
 
 ## Overview
 
-This Bash script provides a comprehensive solution for setting up and managing Ollama on Mac M1 (ARM64) machines. It offers an interactive interface to install Ollama, manage models, run tests, and even get started with Python integration.
+This Bash script provides a comprehensive solution for setting up and managing Ollama on Mac OS (ARM64) machines. It offers an interactive interface to install Ollama, manage models, run tests, and even get started with Python integration.
 
 ## Features
 
