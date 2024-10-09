@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e  # Exit immediately if a command exits with a non-zero status.
+
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -55,6 +57,8 @@ check_homebrew() {
         print_color $GREEN "Homebrew installed successfully."
     else
         print_color $GREEN "Homebrew is already installed."
+        print_color $YELLOW "Updating Homebrew..."
+        brew update
     fi
 }
 
@@ -67,6 +71,10 @@ check_python() {
     else
         print_color $GREEN "Python 3 is already installed."
     fi
+    # Install required Python packages
+    print_color $YELLOW "Installing required Python packages..."
+    pip3 install --upgrade pip
+    pip3 install requests ollama
 }
 
 # Install Ollama
@@ -118,7 +126,8 @@ manage_models() {
         echo "2. Pull a model"
         echo "3. List installed models"
         echo "4. Remove a model"
-        echo "5. Return to main menu"
+        echo "5. Benchmark models"
+        echo "6. Return to main menu"
         prompt_user "Enter your choice: " model_choice
 
         case $model_choice in
@@ -129,9 +138,20 @@ manage_models() {
                ollama list ;;
             4) prompt_user "Enter the name of the model you'd like to remove: " model_name
                ollama rm $model_name ;;
-            5) break ;;
+            5) benchmark_models ;;
+            6) break ;;
             *) print_color $RED "Invalid choice. Please try again." ;;
         esac
+    done
+}
+
+# Function to benchmark models
+benchmark_models() {
+    print_color $YELLOW "Benchmarking installed models..."
+    installed_models=$(ollama list | awk '{print $1}')
+    for model in $installed_models; do
+        print_color $BLUE "Benchmarking $model..."
+        ollama run $model "Benchmark: Write a short story about a robot learning to love." --verbose
     done
 }
 
@@ -150,6 +170,47 @@ display_system_info() {
     fi
 }
 
+# Function to run a simple Ollama test
+run_ollama_test() {
+    print_color $YELLOW "Running a simple Ollama test..."
+    if ! command_exists ollama; then
+        print_color $RED "Ollama is not installed. Please install it first."
+        return
+    fi
+    
+    installed_models=$(ollama list | awk '{print $1}')
+    if [ -z "$installed_models" ]; then
+        print_color $RED "No models installed. Please pull a model first."
+        return
+    fi
+    
+    model=$(echo "$installed_models" | head -n 1)
+    print_color $BLUE "Using model: $model"
+    
+    response=$(ollama run $model "Hello, can you tell me a joke?")
+    print_color $GREEN "Ollama response:"
+    echo "$response"
+}
+
+# Function to create a simple Python script to interact with Ollama
+create_python_script() {
+    print_color $YELLOW "Creating a simple Python script to interact with Ollama..."
+    cat << EOF > ollama_test.py
+import ollama
+
+response = ollama.chat(model='llama2', messages=[
+    {
+        'role': 'user',
+        'content': 'Hello, how are you?'
+    }
+])
+
+print(response['message']['content'])
+EOF
+    print_color $GREEN "Python script created: ollama_test.py"
+    print_color $YELLOW "You can run it with: python3 ollama_test.py"
+}
+
 # Main menu
 main_menu() {
     while true; do
@@ -157,14 +218,18 @@ main_menu() {
         echo "1. Install/Update Ollama"
         echo "2. Manage Models"
         echo "3. Display System Information"
-        echo "4. Exit"
+        echo "4. Run Ollama Test"
+        echo "5. Create Python Script"
+        echo "6. Exit"
         prompt_user "Enter your choice: " main_choice
 
         case $main_choice in
             1) install_ollama ;;
             2) manage_models ;;
             3) display_system_info ;;
-            4) print_color $GREEN "Thank you for using the Ollama Setup Script. Goodbye!"
+            4) run_ollama_test ;;
+            5) create_python_script ;;
+            6) print_color $GREEN "Thank you for using the Ollama Setup Script. Goodbye!"
                exit 0 ;;
             *) print_color $RED "Invalid choice. Please try again." ;;
         esac
@@ -172,12 +237,13 @@ main_menu() {
 }
 
 # Main script
-print_color $GREEN "Welcome to the Improved Ollama Setup Script for Mac M1!"
+print_color $GREEN "Welcome to the Further Improved Ollama Setup Script for Mac M1!"
 
 check_system_requirements
 check_xcode_cli
 check_homebrew
 check_python
+install_ollama
 
 main_menu
 
