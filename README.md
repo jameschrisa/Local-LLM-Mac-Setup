@@ -6,7 +6,7 @@ This Bash script provides a comprehensive solution for setting up and managing O
 
 ## Features
 
-- **System Compatibility Check**: Ensures the script is run on a Mac M1 (ARM64) machine.
+- **System Compatibility Check**: Ensures the script is run on a Mac (ARM64) machines.
 - **Dependency Management**: Checks and installs necessary dependencies (Xcode CLI, Homebrew, Python).
 - **Ollama Installation and Update**: Installs Ollama if not present, and offers to update if already installed.
 - **Model Management**:
