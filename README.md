@@ -29,13 +29,13 @@ This Bash script provides a comprehensive solution for setting up and managing O
 
 1. Download the script:
    ```
-   curl -O https://raw.githubusercontent.com/yourusername/ollama-setup/main/advanced_setup_ollama.sh
+   curl -O https://raw.githubusercontent.com/yourusername/ollama-setup/main/llm-setup.sh
    ```
    (Replace with the actual URL where you host the script)
 
 2. Make the script executable:
    ```
-   chmod +x advanced_setup_ollama.sh
+   chmod +x llm-setup.sh
    ```
 
 ## Usage
@@ -43,7 +43,7 @@ This Bash script provides a comprehensive solution for setting up and managing O
 Run the script with:
 
 ```
-./advanced_setup_ollama.sh
+./llm-setup.sh
 ```
 
 Follow the on-screen prompts to navigate through different options:
